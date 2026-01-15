@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人人追剧 - 智能下载</title>
+    <style>
+        :root {
+            --primary-color: #ff4757;
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: -apple-system, system-ui, sans-serif;
+            background: var(--bg-gradient);
+            height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            color: white; overflow: hidden;
+        }
+
+        /* 遮罩层样式 */
+        #weixin-mask {
+            display: none; /* 默认隐藏 */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000; text-align: right;
+        }
+        #weixin-mask img {
+            width: 80%; margin-top: 10px; margin-right: 20px;
+            max-width: 300px;
+        }
+        .mask-text {
+            color: white; text-align: center; font-size: 1.2rem;
+            margin-top: 20px; font-weight: bold;
+        }
+
+        /* 主容器 */
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 2.5rem; border-radius: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 85%; max-width: 380px;
+        }
+
+        .logo { font-size: 50px; margin-bottom: 1rem; }
+        h1 { margin: 0; font-size: 1.6rem; }
+        p { opacity: 0.6; font-size: 0.85rem; margin: 10px 0 30px; }
+
+        .download-btn {
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e; text-decoration: none;
+            padding: 14px; margin-bottom: 1.2rem;
+            border-radius: 12px; font-weight: 600;
+            transition: all 0.3s ease; position: relative;
+        }
+
+        /* 推荐高亮 */
+        .recommended {
+            background: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border: 2px solid var(--primary-color);
+        }
+        .recommended::after {
+            content: "推荐"; position: absolute;
+            right: -10px; top: -10px;
+            background: var(--primary-color);
+            color: white; font-size: 10px;
+            padding: 2px 8px; border-radius: 20px;
+        }
+
+        .footer-links { margin-top: 20px; font-size: 0.75rem; opacity: 0.4; }
+    </style>
+</head>
+<body>
+
+    <div id="weixin-mask" onclick="this.style.display='none'">
+        <p class="mask-text">点击右上角选择<br>“在浏览器中打开”</p>
+        <p style="color: #ccc; text-align: center;">👇</p>
+    </div>
+
+    <div class="container">
+        <div class="logo">🎬</div>
+        <h1>人人追剧</h1>
+        <p id="device-tip">正在识别您的系统...</p>
+
+        <a href="https://wwbsc.lanzoub.com/b0pnc96bc" class="download-btn" id="btn-android">Android 下载</a>
+        <a href="" class="download-btn" id="btn-ios">iOS 官方版</a>
+        <a href="https://y.yyaac.top" class="download-btn" id="btn-web">直接进入网页版</a>
+
+        <div class="footer-links">
+            版本号: v2.4.0 | 适配 iOS / Android
+        </div>
+    </div>
+
+    <script>
+        function initPage() {
+            const ua = navigator.userAgent.toLowerCase();
+            const tip = document.getElementById('device-tip');
+            const mask = document.getElementById('weixin-mask');
+            
+            const isWeixin = /micromessenger/i.test(ua);
+            const isAndroid = /android/i.test(ua);
+            const isIos = /iphone|ipad|ipod/i.test(ua);
+
+            // 1. 处理微信环境
+            if (isWeixin) {
+                mask.style.display = 'block'; // 显示遮罩
+            }
+
+            // 2. 处理设备高亮
+            if (isIos) {
+                document.getElementById('btn-ios').classList.add('recommended');
+                tip.innerText = "已为您匹配 iOS 专属版本";
+            } else if (isAndroid) {
+                document.getElementById('btn-android').classList.add('recommended');
+                tip.innerText = "已为您匹配 Android 高清版";
+            } else {
+                document.getElementById('btn-web').classList.add('recommended');
+                tip.innerText = "建议直接访问网页版";
+            }
+        }
+
+        window.onload = initPage;
+    </script>
+</body>
+</html>
